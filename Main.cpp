@@ -1,12 +1,12 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Color.hpp>
 #include <algorithm>
-#include <cmath>
+#include <cmath> 
 #include <iostream>
 #include <string>
+#include "Main.hpp"
 
-#include "main.hpp"
-
+// Constant values for map and window sizes
 const int map_size_x{ 30 };
 const int map_size_y{ 30 };
 const int window_size_x{ 720 };
@@ -17,6 +17,7 @@ int map_view[map_size_y][map_size_x];
 
 int square_size = (int)(std::min(window_size_x / map_size_x, window_size_y / map_size_y));
 
+// This stores the 8 directions around each cell
 const int ways[8][2] = { { -1, -1 },
 		{ -1, 0 },
 		{ -1, 1 },
@@ -25,6 +26,20 @@ const int ways[8][2] = { { -1, -1 },
 		{ 1, -1 },
 		{ 1, 0 },
 		{ 1, 1 } };
+
+
+// Random number generator function
+int random(int min, int max)
+{
+	static bool first = true;
+	if (first)
+	{
+		srand(time(NULL));
+		first = false;
+	}
+	return min + rand() % ((max + 1) - min);
+}
+
 
 class Map {
 private:
@@ -42,12 +57,14 @@ public:
 
 	Map() : app(sf::VideoMode(window_size_x, window_size_y), "Minesweeper!", sf::Style::Close) {
 
+		// Load all assets
 		flag.loadFromFile("Textures/flag.png");
 		mine.loadFromFile("Textures/mine.png");
 		square.loadFromFile("Textures/Square.png");
-
 		font.loadFromFile("Textures/FutureLight-BW15w.ttf");
 	}
+
+	// Getters
 
 	sf::RenderWindow& GetWindow() {
 		return app;
@@ -133,29 +150,29 @@ public:
 		{
 			for (int x = 0; x < map_size_x; x++)
 			{
-				map_view[y][x] = 10;
+				map_view[y][x] = 10; // Filled square
 				if (random(0, 5) == 1)
 				{
 					map[y][x] = -1; //mine
 				}
 				else
 				{
-					map[y][x] = 0;
+					map[y][x] = 0; //normal
 				}
 			}
 		}
 		SetNumbers();
 	}
 
-	void OpenAllZeroAround(int x, int y)
+	void OpenAllZeroAround(int x, int y) // Used when clicking a square (Recursive)
 	{
 		for (auto i : ways)
 		{
 
-			if (x - i[0] >= 0 && x - i[0] < map_size_x && y - i[1] >= 0 && y - i[1] < map_size_y && (map_view[y - i[1]][x - i[0]] == 10))
+			if (x - i[0] >= 0 && x - i[0] < map_size_x && y - i[1] >= 0 && y - i[1] < map_size_y && (map_view[y - i[1]][x - i[0]] == 10)) // If in bounds and is a filled square
 			{
-				map_view[y - i[1]][x - i[0]] = map[y - i[1]][x - i[0]];
-				if (map[y - i[1]][x - i[0]] == 0)
+				map_view[y - i[1]][x - i[0]] = map[y - i[1]][x - i[0]]; // Open the square
+				if (map[y - i[1]][x - i[0]] == 0) // If normal square
 				{
 					OpenAllZeroAround(x - i[0], y - i[1]);
 				}
@@ -174,7 +191,7 @@ public:
 					int n = 0;
 					for (auto i : ways)
 					{
-						if (x - i[0] >= 0 && x - i[0] < map_size_x && y - i[1] >= 0 && y - i[1] < map_size_y && map[y - i[1]][x - i[0]] == -1)
+						if (x - i[0] >= 0 && x - i[0] < map_size_x && y - i[1] >= 0 && y - i[1] < map_size_y && map[y - i[1]][x - i[0]] == -1) // Checks for mines (-1)
 						{
 							n++;
 						}
@@ -208,12 +225,14 @@ public:
 		mineMap->GetWindow().display();
 		sf::Event e;
 		std::cout << "Game Over: " << t << std::endl;
-		while (mineMap->GetWindow().pollEvent(e))
+		while (mineMap->GetWindow().isOpen())
 		{
-			if (e.type == sf::Event::Closed)
+			while (mineMap->GetWindow().pollEvent(e))
 			{
-				mineMap->GetWindow().close();
-				return;
+				if (e.type == sf::Event::Closed)
+				{
+					mineMap->GetWindow().close();
+				}
 			}
 		}
 	}
@@ -276,9 +295,8 @@ public:
 							}
 							if (map[y][x] == -1)
 							{
-								std::string t = "Game over!";
 								mineMap->ShowMine(x, y);
-								GameOver(t);
+								GameOver("Game Over!");
 								//return;
 							}
 							CheckWin();
