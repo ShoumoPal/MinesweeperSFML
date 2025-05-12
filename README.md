@@ -15,6 +15,8 @@
 Just run the executable at "MinesweeperSFML/Game executables"
 
 ![image](https://github.com/user-attachments/assets/5f2deda2-d399-46bd-adf3-d6e6e06de760)
+---
+![image](https://github.com/user-attachments/assets/79a339a1-1331-4ac0-bc32-3f770b6a42bd)
 
 ---
 
