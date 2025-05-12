@@ -10,15 +10,13 @@
 - Win and Game Over states
 - Custom font support and clean UI
 
-## 🚀 How to Run
+## 🚀 How to Run?
 
-### 1. **Install SFML**
+Just run the executable at "MinesweeperSFML/Game executables"
 
-**On Windows:**  
-https://www.sfml-dev.org/download.php (SFML 2.6.2 for C++ 17)
+![image](https://github.com/user-attachments/assets/5f2deda2-d399-46bd-adf3-d6e6e06de760)
 
-### 2. **Add 
-
+---
 
 ## Short gameplay demo
 
