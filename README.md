@@ -10,6 +10,10 @@
 - Win and Game Over states
 - Custom font support and clean UI
 
+## ⌚ Time complexities
+
+- Flood-fill -> O(n * m)
+  
 ## 🚀 How to Run?
 
 Just run the executable at "MinesweeperSFML/Game executables"
